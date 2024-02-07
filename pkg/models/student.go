@@ -1,24 +1,19 @@
 package models
 
 import (
-	"github.com/anaard/simple-student-management/pkg/config"
 	"github.com/jinzhu/gorm"
-	//"time"
 )
 
-var db *gorm.DB
-// TODO: Incluir campos: Total de Faltas, média de notas (score)
 type Student struct {
-	gorm.Model // Include following fields to the DB: ID, CreatedAt, UpdatedAt e DeletedAt
-	Name       string `json:"name"`
-	Birth      string `json:"birth"` // Change to time
-	Class      string `json:"class"`
+	gorm.Model           // Include following fields to the DB: ID, CreatedAt, UpdatedAt e DeletedAt
+	Name         string  `json:"name"`
+	ClassId      uint    `gorm:"default:0" json:"class"`
+	TotalFaults  uint    `gorm:"default:0" json:"total_faults"`
+	GradeAverage float64 `json:"grade_average"`
 }
 
-func init() { // Function called before main
-	config.Connect()
-	db = config.GetDB()
-	db.AutoMigrate(&Student{})
+func (Student) TableName() string {
+	return "students"
 }
 
 func (s *Student) CreateStudent() *Student {
@@ -33,15 +28,25 @@ func GetAllStudents() []Student {
 	return Students
 }
 
-func GetStudentbyId(Id int64) (*Student, *gorm.DB) {
+func GetStudentbyId(ID int64) (*Student, *gorm.DB) {
 	var s Student
-	db := db.Where("Id=?", Id).Find(&s)
+	db := db.Where("Id=?", ID).Find(&s)
+
 	return &s, db
 }
 
-func DeleteStudent(ID int64) Student {
+func DeleteStudent(ID int64) (Student, error) {
 	var s Student
-	db.First(&s, ID)
-	db.Delete(&s)
-	return s
+	// Find the student with the given ID
+	if err := db.First(&s, ID).Error; err != nil {
+		// Return an error if the student is not found
+		return s, err
+	}
+	// Delete the student
+	if err := db.Delete(&s).Error; err != nil {
+		// Return an error if there was an issue deleting the student
+		return s, err
+	}
+	// Return the deleted student
+	return s, nil
 }

@@ -1,6 +1,6 @@
 package controllers
 
-// TODO: delete returning empty
+// TODO: Ver status de erros corretos
 import (
 	"net/http"
 
@@ -8,9 +8,19 @@ import (
 )
 
 func DeleteStudent(w http.ResponseWriter, r *http.Request) {
-	id := getStudentId(r)
+	id := getId(r, "studentId")
 
-	student := models.DeleteStudent(id)
+	student, err := models.DeleteStudent(id)
+
+	if err != nil {
+		writeJSONResponse(w, http.StatusNotFound, models.Student{})
+		return
+	}
+
+	if student.ID == 0 {
+		writeJSONResponse(w, http.StatusInternalServerError, models.Student{})
+		return
+	}
 
 	writeJSONResponse(w, http.StatusOK, student)
 }

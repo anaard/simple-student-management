@@ -12,9 +12,9 @@ func GetStudents(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetStudentByID(w http.ResponseWriter, r *http.Request) {
-	id := getStudentId(r)
-	
+	id := getId(r, "studentId")
+
 	student, _ := models.GetStudentbyId(id)
-	
+
 	writeJSONResponse(w, http.StatusOK, student)
 }

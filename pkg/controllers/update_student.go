@@ -10,23 +10,24 @@ import (
 func UpdateStudent(w http.ResponseWriter, r *http.Request) {
 	var updateStudent = &models.Student{}
 	utils.ParseBody(r, updateStudent)
-	
-	id := getStudentId(r)
-	
+
+	id := getId(r, "studentId")
+
 	student, db := models.GetStudentbyId(id)
-	
+
+	if student.ID == 0 { // Student doesn't exist on the db
+		writeJSONResponse(w, http.StatusInternalServerError, models.Student{})
+		return
+	}
+
 	if updateStudent.Name != "" {
 		student.Name = updateStudent.Name
 	}
-	
-	if updateStudent.Birth != "" {
-		student.Birth = updateStudent.Birth
+
+	if updateStudent.ClassId > 0 {
+		student.ClassId = updateStudent.ClassId
 	}
-	
-	if updateStudent.Class != "" {
-		student.Class = updateStudent.Class
-	}
-	
+
 	db.Save(&student) // TODO: Handle this error
 	writeJSONResponse(w, http.StatusOK, student)
 }

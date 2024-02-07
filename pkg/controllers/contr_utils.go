@@ -20,14 +20,15 @@ func writeJSONResponse(w http.ResponseWriter, status int, data interface{}) {
 	w.Write(res)
 }
 
-func getStudentId(r *http.Request) int64 {
+func getId(r *http.Request, typeId string) int64 {
 	vars := mux.Vars(r)
 
-	studentId := vars["studentId"]
+	id := vars[typeId]
 
-	id, err := strconv.ParseInt(studentId, 0, 0)
+	resultId, err := strconv.ParseInt(id, 0, 0)
 	if err != nil {
 		fmt.Println("Error while Parsing")
+		return 0
 	}
-	return id
+	return resultId
 }

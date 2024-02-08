@@ -4,22 +4,23 @@ import (
 	"net/http"
 
 	"github.com/anaard/simple-student-management/pkg/models"
+	"github.com/anaard/simple-student-management/pkg/utils"
 )
 
-func DeleteClass(w http.ResponseWriter, r *http.Request) { // TODO: Change students classes to None when a class is deleted
-	id := getId(r, "classId")
+func (s SystemController) DeleteClass(w http.ResponseWriter, r *http.Request) { // TODO: Change students classes to None when a class is deleted
+	id := utils.GetId(r, "classId")
 
 	class, err := models.DeleteClass(id)
 
 	if err != nil {
-		writeJSONResponse(w, http.StatusNotFound, models.Class{})
+		utils.WriteJSONResponse(w, http.StatusNotFound, models.Class{})
 		return
 	}
 
 	if class.ID == 0 {
-		writeJSONResponse(w, http.StatusInternalServerError, models.Class{})
+		utils.WriteJSONResponse(w, http.StatusInternalServerError, models.Class{})
 		return
 	}
 
-	writeJSONResponse(w, http.StatusOK, class)
+	utils.WriteJSONResponse(w, http.StatusOK, class)
 }

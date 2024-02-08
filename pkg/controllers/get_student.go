@@ -4,17 +4,18 @@ import (
 	"net/http"
 
 	"github.com/anaard/simple-student-management/pkg/models"
+	"github.com/anaard/simple-student-management/pkg/utils"
 )
 
-func GetStudents(w http.ResponseWriter, r *http.Request) {
+func (s SystemController) GetStudents(w http.ResponseWriter, r *http.Request) {
 	students := models.GetAllStudents()
-	writeJSONResponse(w, http.StatusOK, students)
+	utils.WriteJSONResponse(w, http.StatusOK, students)
 }
 
-func GetStudentByID(w http.ResponseWriter, r *http.Request) {
-	id := getId(r, "studentId")
+func (s SystemController) GetStudentByID(w http.ResponseWriter, r *http.Request) {
+	id := utils.GetId(r, "studentId")
 
 	student, _ := models.GetStudentbyId(id)
 
-	writeJSONResponse(w, http.StatusOK, student)
+	utils.WriteJSONResponse(w, http.StatusOK, student)
 }

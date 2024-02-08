@@ -7,16 +7,16 @@ import (
 	"github.com/anaard/simple-student-management/pkg/utils"
 )
 
-func UpdateStudent(w http.ResponseWriter, r *http.Request) {
+func (s SystemController) UpdateStudent(w http.ResponseWriter, r *http.Request) {
 	var updateStudent = &models.Student{}
 	utils.ParseBody(r, updateStudent)
 
-	id := getId(r, "studentId")
+	id := utils.GetId(r, "studentId")
 
 	student, db := models.GetStudentbyId(id)
 
 	if student.ID == 0 { // Student doesn't exist on the db
-		writeJSONResponse(w, http.StatusInternalServerError, models.Student{})
+		utils.WriteJSONResponse(w, http.StatusInternalServerError, models.Student{})
 		return
 	}
 
@@ -29,5 +29,5 @@ func UpdateStudent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db.Save(&student) // TODO: Handle this error
-	writeJSONResponse(w, http.StatusOK, student)
+	utils.WriteJSONResponse(w, http.StatusOK, student)
 }

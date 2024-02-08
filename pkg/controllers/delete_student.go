@@ -5,22 +5,23 @@ import (
 	"net/http"
 
 	"github.com/anaard/simple-student-management/pkg/models"
+	"github.com/anaard/simple-student-management/pkg/utils"
 )
 
-func DeleteStudent(w http.ResponseWriter, r *http.Request) {
-	id := getId(r, "studentId")
+func (s SystemController) DeleteStudent(w http.ResponseWriter, r *http.Request) {
+	id := utils.GetId(r, "studentId")
 
 	student, err := models.DeleteStudent(id)
 
 	if err != nil {
-		writeJSONResponse(w, http.StatusNotFound, models.Student{})
+		utils.WriteJSONResponse(w, http.StatusNotFound, models.Student{})
 		return
 	}
 
 	if student.ID == 0 {
-		writeJSONResponse(w, http.StatusInternalServerError, models.Student{})
+		utils.WriteJSONResponse(w, http.StatusInternalServerError, models.Student{})
 		return
 	}
 
-	writeJSONResponse(w, http.StatusOK, student)
+	utils.WriteJSONResponse(w, http.StatusOK, student)
 }

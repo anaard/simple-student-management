@@ -1,4 +1,4 @@
-package controllers
+package utils
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func writeJSONResponse(w http.ResponseWriter, status int, data interface{}) {
+func WriteJSONResponse(w http.ResponseWriter, status int, data interface{}) {
 	res, err := json.Marshal(data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -20,7 +20,19 @@ func writeJSONResponse(w http.ResponseWriter, status int, data interface{}) {
 	w.Write(res)
 }
 
-func getId(r *http.Request, typeId string) int64 {
+func WriteErrorResponse(w http.ResponseWriter, status int, message string) {
+	e := make(map[string]string)
+
+	e["Message"] = message
+	e["Status"] = strconv.Itoa(status)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(e)
+
+}
+
+func GetId(r *http.Request, typeId string) int64 {
 	vars := mux.Vars(r)
 
 	id := vars[typeId]

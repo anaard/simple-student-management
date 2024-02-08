@@ -1,52 +1,27 @@
 package config
 
 import (
-	"encoding/json"
-	"io/ioutil"
+	"fmt"
+	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-type mySQLConfigData struct {
-	Username string `json:"db_username"`
-	Password string `json:"db_password"`
-	DbName   string `json:"db_name"`
-	Host     string `json:"host"`
-	Port     string `json:"port"`
-}
-
 var (
 	db *gorm.DB
 )
 
-func loadmySQLConfigData(filename string) (mySQLConfigData, error) {
-	bytes, err := ioutil.ReadFile(filename)
-
-	if err != nil {
-		return mySQLConfigData{}, err
-	}
-
-	var config mySQLConfigData
-	err = json.Unmarshal(bytes, &config)
-
-	if err != nil {
-		return mySQLConfigData{}, err
-	}
-
-	return config, nil
-}
-
 func Connect() {
-	mySQLConfig, err := loadmySQLConfigData("pkg/config/.mySQLconfig")
-
-	if err != nil {
-		panic(err)
-	}
-
-	dataSource := mySQLConfig.Username + ":" + mySQLConfig.Password + "@tcp(" + mySQLConfig.Host + ":" + mySQLConfig.Port + ")/" + mySQLConfig.DbName + "?charset=utf8&parseTime=True&loc=Local"
-	d, err := gorm.Open("mysql", dataSource)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"))
 	
+	d, err := gorm.Open("mysql", dsn)
+
 	if err != nil {
 		panic(err)
 	}

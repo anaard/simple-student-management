@@ -7,11 +7,11 @@ import (
 	"github.com/anaard/simple-student-management/pkg/utils"
 )
 
-func CreateStudent(w http.ResponseWriter, r *http.Request) {
+func (s SystemController) CreateStudent(w http.ResponseWriter, r *http.Request) {
 	createStudent := &models.Student{}
 	utils.ParseBody(r, createStudent)
 
 	student := createStudent.CreateStudent()
 
-	writeJSONResponse(w, http.StatusOK, student)
+	utils.WriteJSONResponse(w, http.StatusOK, student)
 }

@@ -6,10 +6,10 @@ import (
 
 type Student struct {
 	gorm.Model           // Include following fields to the DB: ID, CreatedAt, UpdatedAt e DeletedAt
-	Name         string  `json:"name"`
+	Name         string  `json:"name" validate="required, min=2, max=120"`
 	ClassId      uint    `gorm:"default:0" json:"class"`
 	TotalFaults  uint    `gorm:"default:0" json:"total_faults"`
-	GradeAverage float64 `json:"grade_average"`
+	GradeAverage float64 `json:"grade_average" validate="required, min=0, max=100`
 }
 
 func (Student) TableName() string {

@@ -11,7 +11,6 @@ var RegisterStudentManagementRoutes = func(router *mux.Router) {
 
 	router.HandleFunc("/register", UserController.Register).Methods("POST")
 	router.HandleFunc("/login", UserController.Login).Methods("POST")
-	//router.HandleFunc("/logout", UserController.Logout).Methods("POST")
 
 	SystemController := controllers.SystemController{}
 
@@ -22,12 +21,11 @@ var RegisterStudentManagementRoutes = func(router *mux.Router) {
 	router.HandleFunc("/student/{studentId}", middleware.CheckAuth(SystemController.UpdateStudent)).Methods("PUT")
 	router.HandleFunc("/student/{studentId}", middleware.CheckAuth(SystemController.DeleteStudent)).Methods("DELETE")
 
-	router.HandleFunc("/class/", middleware.CheckAuth(SystemController.CreateClass)).Methods("POST")            // create class
+	router.HandleFunc("/class", middleware.CheckAuth(SystemController.CreateClass)).Methods("POST")             // create class
 	router.HandleFunc("/class/all", middleware.CheckAuth(SystemController.GetClasses)).Methods("GET")           // return brief statistics from each class (id, number of students)
 	router.HandleFunc("/class/{classId}", middleware.CheckAuth(SystemController.GetClassById)).Methods("GET")   // return n° students and the students
 	router.HandleFunc("/class/{classId}", middleware.CheckAuth(SystemController.DeleteClass)).Methods("DELETE") // return class and remove students from there
 
-	//router.HandleFunc("/{studentId}", SystemController.EnrollStudent).Methods("POST") // enroll student in class
-	//router.HandleFunc("/{studentId}", SystemController.RemoveStudentFromClass).Methods("DELETE") // remove student from class
-
+	router.HandleFunc("/{classId}/{studentId}", middleware.CheckAuth(SystemController.EnrollStudentInClass)).Methods("POST")     // enroll student in class
+	router.HandleFunc("/{classId}/{studentId}", middleware.CheckAuth(SystemController.RemoveStudentFromClass)).Methods("DELETE") // remove student from class
 }

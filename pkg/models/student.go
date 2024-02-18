@@ -6,14 +6,20 @@ import (
 
 type Student struct {
 	gorm.Model           // Include following fields to the DB: ID, CreatedAt, UpdatedAt e DeletedAt
-	Name         string  `json:"name" validate="required, min=2, max=120"`
-	ClassId      uint    `gorm:"default:0" json:"class"`
-	TotalFaults  uint    `gorm:"default:0" json:"total_faults"`
-	GradeAverage float64 `json:"grade_average" validate="required, min=0, max=100`
+	Name         string  `json:"name" validate:"required,min=2,max=120"`
+	ClassId      uint    `gorm:"default:0" json:"class_id"`
+	TotalFaults  uint    `gorm:"default:0" json:"total_faults" validate:"gte=0"`
+	GradeAverage float64 `json:"grade_average" validate:"required,gte=0,lte=100"`
 }
 
 func (Student) TableName() string {
 	return "students"
+}
+
+func StudentExist(Id int64) bool {
+	var student Student
+	db.Where("Id=?", Id).Find(&student)
+	return !db.RecordNotFound()
 }
 
 func (s *Student) CreateStudent() *Student {
@@ -42,6 +48,11 @@ func DeleteStudent(ID int64) (Student, error) {
 		// Return an error if the student is not found
 		return s, err
 	}
+	
+	if s.ClassId != 0 {
+		RemoveStudentFromClass(uint(ID), s.ClassId)
+	}
+
 	// Delete the student
 	if err := db.Delete(&s).Error; err != nil {
 		// Return an error if there was an issue deleting the student

@@ -11,23 +11,43 @@ func (s SystemController) UpdateStudent(w http.ResponseWriter, r *http.Request) 
 	var updateStudent = &models.Student{}
 	utils.ParseBody(r, updateStudent)
 
+	if err := utils.ValidateStruct(updateStudent); err != nil { // Validate the informations passed
+		utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	id := utils.GetId(r, "studentId")
 
 	student, db := models.GetStudentbyId(id)
 
 	if student.ID == 0 { // Student doesn't exist on the db
-		utils.WriteJSONResponse(w, http.StatusInternalServerError, models.Student{})
+		utils.WriteErrorResponse(w, http.StatusBadRequest, "Student not found.")
 		return
 	}
 
-	if updateStudent.Name != "" {
+	if student.ClassId != 0 && !models.ClassExist(int64(student.ClassId)) { // Class does not exist
+		utils.WriteErrorResponse(w, http.StatusBadRequest, "Class does not exist.")
+		return
+	}
+
+	// The classId can only be updated in the enroll_student_in_class
+
+	if updateStudent.Name != "" && updateStudent.Name != student.Name {
 		student.Name = updateStudent.Name
 	}
 
-	if updateStudent.ClassId > 0 {
-		student.ClassId = updateStudent.ClassId
+	if updateStudent.GradeAverage > 0 && updateStudent.GradeAverage != student.GradeAverage {
+		student.GradeAverage = updateStudent.GradeAverage
 	}
 
-	db.Save(&student) // TODO: Handle this error
+	if updateStudent.TotalFaults != student.TotalFaults {
+		student.TotalFaults = updateStudent.TotalFaults
+	}
+
+	if err := db.Save(&student).Error; err != nil {
+		utils.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	utils.WriteJSONResponse(w, http.StatusOK, student)
 }

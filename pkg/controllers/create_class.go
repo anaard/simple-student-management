@@ -8,8 +8,7 @@ import (
 )
 
 func (s SystemController) CreateClass(w http.ResponseWriter, r *http.Request) {
-	createClass := &models.Class{}
-	utils.ParseBody(r, createClass)
+	createClass := &models.Class{} // The class is always created empty
 
 	class := createClass.CreateClass()
 

@@ -11,6 +11,16 @@ func (s SystemController) CreateStudent(w http.ResponseWriter, r *http.Request) 
 	createStudent := &models.Student{}
 	utils.ParseBody(r, createStudent)
 
+	if err := utils.ValidateStruct(createStudent); err != nil { // Validate the informations passed
+		utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// Not possible to enroll the student in a class from here
+	if createStudent.ClassId != 0 {
+		createStudent.ClassId = 0
+	}
+
 	student := createStudent.CreateStudent()
 
 	utils.WriteJSONResponse(w, http.StatusOK, student)

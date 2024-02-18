@@ -15,7 +15,11 @@ func (s SystemController) GetClasses(w http.ResponseWriter, r *http.Request) {
 func (s SystemController) GetClassById(w http.ResponseWriter, r *http.Request) {
 	id := utils.GetId(r, "classId")
 
-	class, _ := models.GetClassById(id)
+	class, _, err := models.GetClassById(id)
+	if err != nil {
+		utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+		return
+	}
 
 	utils.WriteJSONResponse(w, http.StatusOK, class)
 }

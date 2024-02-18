@@ -1,11 +1,11 @@
 # Golang Student Management System REST API
 
-Golang API with basic JWT Authentication and CRUD operations to manage a student system
+This Golang API provides basic JWT Authentication and CRUD operations to manage a student system.
 
 ## Setup
 
-* Change the provided .env file in the root of the project directory to contain all your variables.
-* Run the following command to create and start the database and development containers (you must have docker and docker compose installed):
+* Change the provided .env file in the project's root directory to include all your variables.
+* Run the following command to create and start the database and development containers (requires docker and docker compose):
 
   ```
   docker compose up
@@ -41,12 +41,12 @@ Golang API with basic JWT Authentication and CRUD operations to manage a student
 }
 ```
 
-###### Output
+##### Output
 
 ```json
 {
     "User": {
-        "ID": id_number,
+        "ID": "id_number",
         "CreatedAt": "date_creation",
         "UpdatedAt": "date_update",
         "DeletedAt": null,
@@ -70,12 +70,12 @@ Golang API with basic JWT Authentication and CRUD operations to manage a student
 }
 ```
 
-###### Output
+##### Output
 
 ```json
 {
     "User": {
-        "ID": id_number,
+        "ID": "id_number",
         "CreatedAt": "date_creation",
         "UpdatedAt": "date_update",
         "DeletedAt": null,
@@ -105,11 +105,11 @@ To execute any of the following requests, you must include the received token wi
 }
 ```
 
-###### Output
+##### Output
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "uptade_time",
     "DeletedAt": null,
@@ -122,12 +122,12 @@ To execute any of the following requests, you must include the received token wi
 
 #### GET `/student/all`
 
-###### Output
+##### Output
 
 ```json
 [
     {
-        "ID": example_id,
+        "ID": "example_id",
         "CreatedAt": "creation_time",
         "UpdatedAt": "update_time",
         "DeletedAt": null,
@@ -141,11 +141,11 @@ To execute any of the following requests, you must include the received token wi
 
 #### GET `/student/<id>`
 
-###### Output
+##### Output
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "update_time",
     "DeletedAt": null,
@@ -168,11 +168,11 @@ To execute any of the following requests, you must include the received token wi
 }
 ```
 
-###### Output
+##### Output
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "update_time",
     "DeletedAt": null,
@@ -185,11 +185,11 @@ To execute any of the following requests, you must include the received token wi
 
 #### DELETE `/student/<id>`
 
-###### Output (The student is deleted from the database and the class)
+##### Output (The student is deleted from the database and the class)
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "2024-02-17T16:14:46Z",
     "UpdatedAt": "2024-02-17T16:14:46Z",
     "DeletedAt": null,
@@ -202,11 +202,11 @@ To execute any of the following requests, you must include the received token wi
 
 #### POST `/class` (The class is always created empty)
 
-###### Output
+##### Output
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "update_time",
     "DeletedAt": null,
@@ -217,12 +217,12 @@ To execute any of the following requests, you must include the received token wi
 
 #### GET `/class/all`
 
-###### Output
+##### Output
 
 ```json
 [
     {
-        "ID": example_id,
+        "ID": "example_id",
         "CreatedAt": "creation_time",
         "UpdatedAt": "update_time",
         "DeletedAt": null,
@@ -234,11 +234,11 @@ To execute any of the following requests, you must include the received token wi
 
 #### GET `/class/<id>`
 
-###### Output
+##### Output
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "update_time",
     "DeletedAt": null,
@@ -249,31 +249,31 @@ To execute any of the following requests, you must include the received token wi
 
 #### DELETE `/class/<id>`
 
-###### Output
+##### Output
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "update_time",
     "DeletedAt": null,
-    "TotalStudentNumber": student_number,
+    "TotalStudentNumber": "student_number",
     "Students": null
 }
 ```
 
 #### POST `/<classId>/<studentId>`
 
-###### Output (The class_id will be equal to the Id provided in the URL and the student will be added to the Students attribute in the Class struct)
+##### Output (The class_id will be equal to the Id provided in the URL and the student will be added to the Students attribute in the Class struct)
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "update_time",
     "DeletedAt": null,
     "name": "example_name",
-    "class_id": changed_id,
+    "class_id": "changed_id",
     "total_faults": 0,
     "grade_average": 70
 }
@@ -281,11 +281,11 @@ To execute any of the following requests, you must include the received token wi
 
 #### DELETE `/<classId>/<studentId>`
 
-###### Output (The class_id will be equal to 0 and the student will be removed from the Students attribute in the Class struct)
+##### Output (The class_id will be equal to 0 and the student will be removed from the Students attribute in the Class struct)
 
 ```json
 {
-    "ID": example_id,
+    "ID": "example_id",
     "CreatedAt": "creation_time",
     "UpdatedAt": "update_time",
     "DeletedAt": null,

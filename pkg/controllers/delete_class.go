@@ -13,12 +13,12 @@ func (s SystemController) DeleteClass(w http.ResponseWriter, r *http.Request) { 
 	class, err := models.DeleteClass(id)
 
 	if err != nil {
-		utils.WriteJSONResponse(w, http.StatusNotFound, models.Class{})
+		utils.WriteErrorResponse(w, http.StatusNotFound, err.Error())
 		return
 	}
 
 	if class.ID == 0 {
-		utils.WriteJSONResponse(w, http.StatusInternalServerError, models.Class{})
+		utils.WriteErrorResponse(w, http.StatusInternalServerError, "The class 0 does not exist")
 		return
 	}
 

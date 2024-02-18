@@ -14,12 +14,12 @@ func (s SystemController) DeleteStudent(w http.ResponseWriter, r *http.Request) 
 	student, err := models.DeleteStudent(id)
 
 	if err != nil {
-		utils.WriteJSONResponse(w, http.StatusNotFound, models.Student{})
+		utils.WriteErrorResponse(w, http.StatusNotFound, err.Error())
 		return
 	}
 
 	if student.ID == 0 {
-		utils.WriteJSONResponse(w, http.StatusInternalServerError, models.Student{})
+		utils.WriteErrorResponse(w, http.StatusInternalServerError, "Student does not exist")
 		return
 	}
 

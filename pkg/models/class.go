@@ -55,9 +55,9 @@ func DeleteClass(ID int64) (Class, error) {
 	if err := db.First(&class, ID).Error; err != nil {
 		return class, err
 	}
-
-	for _, student := range class.Students { // Remove all students before deleting class
-		RemoveStudentFromClass(student.ID, class.ID)
+	
+	if class.TotalStudentNumber > 0 { // Only empty classes will be deleted
+		return class, fmt.Errorf("the required class still have %v students. Remove them before deleting the class", class.TotalStudentNumber)
 	}
 
 	if err := db.Delete(&class).Error; err != nil {
@@ -73,7 +73,7 @@ func GetAllClasses() []Class {
 }
 
 func EnrollStudentInClass(studentId uint, classId uint) error { // Ver se aluno e turma existem
-	if !ClassExist(int64(classId)) || !StudentExist(int64(studentId)) {
+	if !ClassExist(int64(classId)) || !StudentExistId(int64(studentId)) {
 		return fmt.Errorf("Class or Student does not exist")
 	}
 
@@ -117,7 +117,7 @@ func EnrollStudentInClass(studentId uint, classId uint) error { // Ver se aluno 
 }
 
 func RemoveStudentFromClass(studentId uint, oldClassId uint) error {
-	if !ClassExist(int64(oldClassId)) || !StudentExist(int64(studentId)) {
+	if !ClassExist(int64(oldClassId)) || !StudentExistId(int64(studentId)) {
 		return fmt.Errorf("Class or Student does not exist")
 	}
 

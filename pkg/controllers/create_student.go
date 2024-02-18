@@ -16,6 +16,12 @@ func (s SystemController) CreateStudent(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// Verify if a student with the same name does not exist
+	if models.StudentExistName(createStudent.Name) {
+		utils.WriteErrorResponse(w, http.StatusBadRequest, "student name already exists")
+		return
+	}
+
 	// Not possible to enroll the student in a class from here
 	if createStudent.ClassId != 0 {
 		createStudent.ClassId = 0

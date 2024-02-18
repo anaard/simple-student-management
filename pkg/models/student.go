@@ -16,9 +16,15 @@ func (Student) TableName() string {
 	return "students"
 }
 
-func StudentExist(Id int64) bool {
+func StudentExistId(Id int64) bool {
 	var student Student
 	db.Where("Id=?", Id).Find(&student)
+	return !db.RecordNotFound()
+}
+
+func StudentExistName(name string) bool {
+	var student Student
+	db.Where("name = ?", name).First(&student)
 	return !db.RecordNotFound()
 }
 
